@@ -1,0 +1,41 @@
+/* This file contains the outline of the pokemon hierarchy for assignment 3. The pokemon class will be the superclass of
+all pokeon objects to be created. 
+
+  A. Pokemon
+    1.squirtle
+      a.wartortle
+        i.blastoise
+    2.bulbasaur
+      a.ivysaur
+        i.venasaur
+    3.charmander
+      a.charmeleon
+        i.charizard
+ 
+The # will extend pokemon. 
+  a will extend the previous pokemon
+    i will extend the previous pokemon
+^^^^^^^^^^^^^abstract classes^^^^^^^^^^^^
+
+The following are going to be interfaces that connect the pokemon's types
+1.Water
+  a.squirtle
+  b.wartortle
+  c.blastoise
+2.Fire
+  a.charmander
+  b.charmeleon
+  c.charizard ------will have extra interface for flying type.
+3.grass/poison
+  a.bulbasaur
+  b.ivysaur
+  c.venasaur
+
+Each type will be used by using the reserved java word implements into the individual pokemon class.
+I will be creating these types for the individual pokemon.
+
+NOTE:^^^^^^^^^The first classes(squirtle,charmander,bulbasaur) will implement the type class
+and the pokemon evolution states that extends it will inheirt the traits of the types being implemented.
+  
+EXTRA CREDIT:
+  i Will create the eevee pokemon and seperate abstract classes that do not inherit the normal type of eevee.
