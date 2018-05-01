@@ -306,5 +306,46 @@ public abstract class Pokemon {
       return specialAttack;
    }   
    
+      /**
+    * Compare the two pokemon.
+    * @return integer if pokemon1 is less than, 0 if equal
+    * -1 if Pokemon1 is more than pokemon2
+    * @param pokemon2 is the 2nd pokemon being compared
+    */
+   public int compareTo(Pokemon pokemon2) {
+      if (this.number < pokemon2.getNumber()) {
+         return -1;
+      } else if (this.number > pokemon2.getNumber()) {
+         return 1;
+      } else if ((this.name).equals(pokemon2.getName())) {
+         if (hP < pokemon2.getHP()) {
+            return -1;
+         } else if (hP > pokemon2.getHP()) {
+            return 1;
+         } else {
+            if (cP < pokemon2.getHP()) {
+               return -1;
+            } else if (cP > pokemon2.getHP()) {
+               return 1;
+            } else {
+               if ((fastAttack).equals(pokemon2.getFastAttack())) {
+                  if ((specialAttack.equals(pokemon2.getSpecialAttack()))) {
+                     return 0;   
+                  } else {
+                     return 
+                     (specialAttack).compareTo(pokemon2.getSpecialAttack());
+                  }
+               } else {
+                  return (fastAttack).compareTo(pokemon2.getFastAttack());
+               }
+            }
+         }
+      } else {
+         return (this.name).compareTo(pokemon2.getName());
+      }
+   
+   }
+
+   
 
 }
