@@ -195,7 +195,7 @@ public class PokeTree {
       
       if (node != null) {
          s = s + node.getPokemon().toString();
-         s = s + "\nCaught: " + node.getNumCaught() + '\n' + "\n";
+         s = s + "\nCaught: " + node.getNumCaught() + '\n';
          s = s + preorderPokeTree(node.getLChild());
          s = s + preorderPokeTree(node.getRChild());
       }

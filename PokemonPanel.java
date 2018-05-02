@@ -1,7 +1,19 @@
-import java.awt.*;
-import javax.swing.*;
-import java.awt.event.*; //add this for the listener
-import java.util.*;
+import java.awt.Choice;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Color;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import javax.swing.JTextArea;
+import javax.swing.ImageIcon;
+import javax.swing.JScrollPane;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.util.Random;
+import java.util.PriorityQueue;
+import java.util.Deque;
+import java.util.ArrayDeque;
 
 /**
  * Coding and layout for Pokemonframe.java.
@@ -29,7 +41,7 @@ public class PokemonPanel extends JPanel {
    private JTextArea pokedexText = new JTextArea(""); //print tostring methods
 
    //stack, priority queue, and poketree
-   private static Deque<Pokemon> pokemonStack = new ArrayDeque<Pokemon>();
+   private Deque<Pokemon> pokemonStack = new ArrayDeque<Pokemon>();
    private PokeTree pt = new PokeTree();
    private PriorityQueue<Pokemon> pq = new PriorityQueue<>();
 
@@ -71,6 +83,10 @@ public class PokemonPanel extends JPanel {
        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, 
        JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
    
+   /**
+    * This is the pokemon Panel where everything.
+    * is set up.
+    */
    public PokemonPanel() {
    
       //setting up variables to be added
@@ -81,11 +97,16 @@ public class PokemonPanel extends JPanel {
       centerSubPanel.setBackground(Color.white); //center area color
       bottomSubPanel.setBackground(Color.black); //bottomSubPanel area color   
       rightSubPanel.setBackground(Color.black); //right area color
-      pokedexText.setPreferredSize(new Dimension(150, 500)); //set text area size
       bPokedex.setIcon(pokedex); //setting up buttons
       bBackpack.setIcon(backpack); //setting up backpack button
       tTitle.setForeground(Color.white); //white text on black background
       pokedexText.setEditable(false); //non-editable textarea field
+      
+      //setting size of textarea
+      for (int i = 0; i <= 15; i++) {
+         pokeTree += "                                "
+            + "                                     \n";
+      }
       
       //adding choices
       orderChoice.add(""); //start off empty
@@ -138,62 +159,108 @@ public class PokemonPanel extends JPanel {
    */ 
       public void actionPerformed(ActionEvent event) {
       
+         //variables declared for action performed
          Random genRan = new Random();
          int getCaught = 0;
          
+         //if backpack button is pressed
          if (event.getSource() == bBackpack) {
-            String sChoice = new String("");
-            sChoice = orderChoice.getSelectedItem();
-            if(sChoice == "Recent") {
-               String s = new String("");
+            String sChoice = new String(""); //hold choice
+            sChoice = orderChoice.getSelectedItem(); //get choice
+            
+            //if choice recent is clicked
+            if (sChoice == "Recent") {
+               String s = new String(""); //empty string
+               //second stack
                Deque<Pokemon> pokemonStack2 = new ArrayDeque<Pokemon>();
-               while(pokemonStack.size() > 0) {
+               
+               //printing out stack
+               while (pokemonStack.size() > 0) {
                   Pokemon curr = pokemonStack.pop();
-                  pokemonStack2.push(curr);
-                  s = s + curr.toString();
+                  pokemonStack2.push(curr); //also adding to temp stack
+                  s = s + curr.toString() + '\n';
                }
-               pokedexText.setText(s);
-               while(pokemonStack2.size() > 0 ) {
+               pokedexText.setText(s); //set text
+               
+               //adding the temp stack back to main stack
+               while (pokemonStack2.size() > 0) {
                   Pokemon curr = pokemonStack2.pop();
                   pokemonStack.push(curr);
+               }
+               
+            //if number choice ic clicked
+            } else if (sChoice == "Number") {
+               String s = new String(""); //empty string
+               PriorityQueue<Pokemon> pq2 = new PriorityQueue<>(); //second pq
+               
+               //take out elements and add to second pq
+               while (pq.size() > 0) {
+                  Pokemon curr = pq.poll();
+                  pq2.add(curr); //adding pokemons to pq 
+                  s = s + curr.toString() + '\n';
+               }
+               pokedexText.setText(s); //set text
+               
+               //adding the pokemon back to main pq
+               while (pq2.size() > 0) {
+                  Pokemon curr = pq2.poll();
+                  pq.add(curr);
                }
             }
          }
          
-         if(event.getSource() == bPokedex) {
+         //if pokedex button is clicked
+         if (event.getSource() == bPokedex) {
+            //preorder traversal print tostring
             pokedexText.setText(pt.printPokeTree());
          }
-      
-         if(event.getSource() == bHunt) {
-            iGenPoke = genRan.nextInt(10);
+         
+         //if hunt button is pressed
+         if (event.getSource() == bHunt) {
+            iGenPoke = genRan.nextInt(10); //generates new number from 0-9
+            //send number to genpoke method
             Pokemon newPoke = genNewPokemon(iGenPoke);
-            sPokemon = newPoke.getName();
+            sPokemon = newPoke.getName(); //get pokemon name
+            //printpoketostring 
             pokemonToString.setText("A wild " + sPokemon + " has appeared!");
-            wildPoke.setIcon(printPokePic(iGenPoke));
-            caught.setText("");
+            wildPoke.setIcon(printPokePic(iGenPoke)); //get picture
+            
+            //cleaner
+            caught.setText(""); 
             msg.setText("");
          }
          
-         if(event.getSource() == bCatch) {
-            if(iGenPoke == -1){
+         //if catch button is pressed
+         if (event.getSource() == bCatch) {
+         
+            //if button is pressed without hunting first
+            if (iGenPoke == -1) {
+               //cleaner
                msg.setText("");
                pokemonToString.setText("");
                wildPoke.setIcon(mystery);
+               //change settext
                caught.setText("You need to hunt for a pokemon first!");
                
             } else {
-               getCaught = genRan.nextInt(2);
-               Pokemon newPoke = genNewPokemon(iGenPoke);
-               if(getCaught == 0){
+               getCaught = genRan.nextInt(2); //50/50 chance of catching pokemon
+               Pokemon newPoke = genNewPokemon(iGenPoke); //generate pokemon
+               
+               //if caught 
+               if (getCaught == 0) {
                   pokemonToString.setText("");
                   msg.setText("You caught a: ");
-                  wildPoke.setIcon(printPokePic(iGenPoke));
-                  caught.setText(newPoke.toString());
-                  pt.add(newPoke);
-                  pokemonStack.push(newPoke);
-                  iGenPoke = -1;
+                  wildPoke.setIcon(printPokePic(iGenPoke)); //get picture
+                  caught.setText(newPoke.toString()); //set tostring
+                  pt.add(newPoke); //add to poketree
+                  pq.add(newPoke); //add to priority queue
+                  pokemonStack.push(newPoke); //add to stack
+                  iGenPoke = -1; //reset genpoke 
+                 
+               //if not caught
                } else {
                   caught.setText(newPoke.getName() + " ran away");
+                  //cleaner
                   pokemonToString.setText("");
                   msg.setText("");
                   wildPoke.setIcon(mystery);
@@ -202,7 +269,13 @@ public class PokemonPanel extends JPanel {
             }
          }
       }
-   }   public static Pokemon genNewPokemon(int p) {
+   }   
+   /**
+    * Generates a new pokemon.
+    * @param p is for the switch method for which pokemon to make
+    * @return Pokemon to be displayed/added
+    */
+   public static Pokemon genNewPokemon(int p) {
       switch(p) {
          case 1:
             Pokemon b = new Bulbasaur();
@@ -235,9 +308,15 @@ public class PokemonPanel extends JPanel {
             Pokemon e = new Eevee();
             return e;
       } //close switch
-   }//close genPoke
+   } //close genPoke
+   
+   /**
+    * Same as genNewPoke but returns a picture of the pokemon.
+    * @param p is for switch statement
+    * @return ImageIcon is the pokemon picture to be displayed
+    */
    public static ImageIcon printPokePic(int p) {
-      switch(p){
+      switch(p) {
          case 1:
             return bulbasaur;
          case 2:
@@ -260,4 +339,4 @@ public class PokemonPanel extends JPanel {
             return eevee;
       } //close picture switch 
    } //close image icon
-}//close PokemonPanel
+} //close PokemonPanel

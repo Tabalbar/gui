@@ -5,7 +5,7 @@ import java.text.*; //imports decimal format
 * @author Lisa Miller
 * @since 9/23/2016
 */
-public abstract class Pokemon {
+public abstract class Pokemon implements Comparable<Pokemon> {
 
    /*** instance variables. ***/
    /** The species name. */
@@ -150,8 +150,7 @@ public abstract class Pokemon {
    public String toString() {
       DecimalFormat df = new DecimalFormat("000");
       String s = "";
-      
-      s = "Species: " + species + "\n";
+      s = "\n" + "Species: " + species + "\n";
       if (species.compareTo(name) != 0) {
          s = s + "Name: " + name + "\n";
       }
@@ -162,9 +161,8 @@ public abstract class Pokemon {
       if (this.type2.length() > 0) {
          s = s + " | " + this.type2;
       }
-      s = s + "\n";
       s = s + "HP: " + hP + "\n";
-      s = s + "CP: " + cP + "\n";
+      s = s + "CP: " + cP;
       
       return s;
    }
